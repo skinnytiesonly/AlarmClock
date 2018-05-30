@@ -1,0 +1,21 @@
+
+namespace ObserverClass_AlarmClock
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            AlarmClock alarmClock = new AlarmClock();
+
+            Human human = new Human();
+            Calendar calendar = new Calendar();
+            Phone phone = new Phone();
+
+            alarmClock.Ring += human.OnZero;
+            alarmClock.Ring += calendar.OnZero;
+            alarmClock.Ring += phone.OnZero;
+
+            alarmClock.CountDown();
+        }
+    }
+}
