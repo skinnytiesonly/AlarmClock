@@ -1,0 +1,11 @@
+
+namespace ObserverClass_AlarmClock
+{
+    class Calendar
+    {
+        public void OnZero(object sender, AlarmEventArgs e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+}
