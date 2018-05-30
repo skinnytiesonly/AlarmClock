@@ -1,0 +1,101 @@
+
+namespace ObserverClass_AlarmClock
+{
+    class AlarmEventArgs : EventArgs
+    {
+        public string Message { get; set; }
+    }
+
+    class AlarmClock
+    {
+        public int time { get; set; }
+        public string text { get; set; }
+        ConsoleKeyInfo key;
+        bool quit;
+
+        public event EventHandler<AlarmEventArgs> Ring;
+
+        public void CountDown()
+        {
+
+            Console.Write("Enter in seconds the duration: ");
+           
+            time = SetTimer(int.Parse(Console.ReadLine()));
+
+            Console.WriteLine("What Message would you like displayed?");
+
+            text = Console.ReadLine();
+
+            //initialize alarmClock Start,Stop methods
+
+            var timer = new Stopwatch();
+
+            Console.WriteLine("Timer Options:");
+            Console.WriteLine("______________");
+            Console.WriteLine("Start - s");
+
+            key = Console.ReadKey(false);
+            if (key.Key == ConsoleKey.S)
+            {
+                timer.Start();
+                Console.WriteLine("Timer Has Started");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Timer Options:");
+            Console.WriteLine("______________");
+            Console.WriteLine("Resume - r");
+            Console.WriteLine("Pause - p");
+            Console.WriteLine("Quit  - q");
+
+            while (timer.ElapsedMilliseconds <= time)
+            {
+                
+                var key = Console.ReadKey(false);
+               /*
+                * Issue here is that the timer will contine past the desired time due to waiting on the ReadKey function.
+                * User must press q to quit or p pause after the elapsed time in order to notify subscirbers. Unable to find a work around at the moment. 
+                */
+
+                if (key.Key != ConsoleKey.Q)
+                {
+
+                    if (key.Key == ConsoleKey.P)
+                    {
+                        timer.Stop();
+                        Console.WriteLine("Timer Has Paused  --> " + timer.ElapsedMilliseconds);
+                    }
+                    if (key.Key == ConsoleKey.R)
+                    {
+                        timer.Start();
+                        Console.WriteLine("Timer Has Resumed");
+                    }
+                }
+                else
+                {
+                    time = 0;
+                }//end if
+            }//end while
+
+            if (timer.ElapsedMilliseconds >= time && time != 0)
+            {
+                OnZero(text);
+            }
+        }//end countdown
+
+        public int SetTimer(int _time)
+        {
+            
+            return _time * 1000;
+        }
+
+        protected virtual void OnZero(string text)
+        {
+            if (Ring != null)
+            {
+                Ring(this, new AlarmEventArgs() { Message = text });
+            }
+        }
+
+    }
+}
