@@ -1,0 +1,11 @@
+namespace ObserverClass_AlarmClock
+{
+    class Human
+    {
+        public void OnZero(object sender, AlarmEventArgs e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
+    }
+}
